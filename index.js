@@ -10,11 +10,6 @@ app.use(cors())
 app.use(express.json())
 require('dotenv').config()
 
-
-
-
-
-
 const uri = `mongodb+srv://${process.env.COMPUTER}:${process.env.PASSWORD}@cluster0.mdunt9i.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
@@ -22,12 +17,23 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try{
         const categoriesCollection = client.db('assignment12').collection('categories')
+        const productsCollection = client.db('assignment12').collection('products')
+
+        //get categories
         app.get('/categoires',async (req,res)=>{
             const query = {};
             const cursor = categoriesCollection.find(query)
             const gategories = await cursor.toArray()
             res.send(gategories)
         })
+        // all categories data
+        app.get('/categoires/:id', async (req,res)=>{
+            const id = req.params.id;
+            const query = {category_id:id}
+            const result = await productsCollection.find(query).toArray()
+            res.send(result)
+        })
+
     }
     finally{
 

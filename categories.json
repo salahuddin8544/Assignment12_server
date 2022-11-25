@@ -1,6 +1,5 @@
 [
   {
-    "id": "637f3b8d48dbdc0bab510cf7",
     "category_id": "1",
     "index": 0,
     "originalPrice": "55,000",
@@ -18,7 +17,6 @@
     "discription": "> Brand:- Dell & HP and Lenovo> Processor :- i7 > Generation :- 1st>Ram :- 8Gb RAM> Keyboard Mouse > VGA Cable> Power Cable > 1 Month Replacement Warranty"
   },
   {
-    "id": "637f3b8d21576df6c13731b9",
     "category_id": "1",
     "index": 1,
     "originalPrice": "55,000",
@@ -36,7 +34,6 @@
     "discription": "  Hard drive:1 TB.  With a firm commitment to quality, our organization is engaged in offering a wide ambit of Dell Computer System"
   },
   {
-    "id": "637f3b8d565bf5bba4d0a866",
     "category_id": "1",
     "index": 2,
     "originalPrice": "50,000",
@@ -56,7 +53,6 @@
     "discription": " It is the good and comportalble uses computer . You can use smootly .It  works fast "
   },
   {
-    "id": "637f3b8d3ed9565ee3c1549f",
     "category_id": "2",
     "index": 3,
     "originalPrice": "220,000",
@@ -74,7 +70,6 @@
     "discription": "Apple iMac 21.5-inch Full HD Display, Core i5 7th Gen, 8GB RAM, 256GB SSD (MHK03ZP/A)"
   },
   {
-    "id": "637f3b8de14a0506c2ba9416",
     "category_id": " 2",
     "index": 4,
     "originalPrice": "230,000",
@@ -92,7 +87,6 @@
     "discription": "Zotac MEK MINI Core i5 9th Gen RTX 2060 SUPER 8GB Graphics Gaming Mini PC"
   },
   {
-    "id": "637f3b8d81fb0489831de03a",
     "category_id": "3",
     "index": 5,
     "originalPrice": "73,000",
@@ -111,7 +105,6 @@
   },
 
   {
-    "id": "637f3b8daa22662d10d841a8",
     "category_id": "3",
     "index": 6,
     "originalPrice": "41,000",
@@ -129,7 +122,6 @@
     "discription": " Processor: Intel Celeron N4020 (4M Cache, 1.10 GHz up to 2.80 GHz)"
   },
   {
-    "id": "637f3b8d885964f413ce9c80",
     "category_id": "3",
     "index": 7,
     "originalPrice": "45,000",
@@ -147,7 +139,6 @@
     "discription": "Processor: Intel Core i5-10210U (4 Core, 6M cache, 1.6GHz, up to 4.2GHz)"
   },
   {
-    "id": "637f3b8d86fd365b87253b6d",
     "category_id": "4",
     "index": 8,
     "originalPrice": "41,000",
@@ -166,7 +157,6 @@
  
   },
   {
-    "id": "637f3b8dd1a148daf3e24aa4",
     "category_id": "4",
     "index": 9,
     "originalPrice": "21,000",
@@ -184,7 +174,6 @@
     "discription": "<ReferenceError: anything is not defined>"
   },
   {
-    "id": "637f3b8d0d082db83097371e",
     "category_id": "4",
     "index": 10,
     "originalPrice": "24,000",
@@ -202,7 +191,6 @@
     "discription": "Samsung Galaxy Tab S3 9.7-Inch, 32GB Tablet Black . Fire HD 10 Tablet with Alexa Hands-Free, 10.11080p Full HD"
   },
   {
-    "id": "637f3b8d49d4f158fb3a4cde",
     "category_id": "4",
     "index": 11,
     "originalPrice": "22,000",
