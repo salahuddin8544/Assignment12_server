@@ -18,6 +18,7 @@ async function run(){
     try{
         const categoriesCollection = client.db('assignment12').collection('categories')
         const productsCollection = client.db('assignment12').collection('products')
+        const buyerBookingsCollection = client.db('assignment12').collection('bookings')
 
         //get categories
         app.get('/categoires',async (req,res)=>{
@@ -33,6 +34,16 @@ async function run(){
             const result = await productsCollection.find(query).toArray()
             res.send(result)
         })
+
+        // post bookings data in db
+
+            app.post('/bookings', async(req,res)=>{
+                const buyerBooking = req.body
+                console.log(buyerBooking);
+                const result = await buyerBookingsCollection.insertOne(buyerBooking)
+                res.send(result)
+            })
+
 
     }
     finally{
