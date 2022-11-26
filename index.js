@@ -35,13 +35,21 @@ async function run(){
             res.send(result)
         })
 
-        // post bookings data in db
+        // post bookings buyer data in db
 
             app.post('/bookings', async(req,res)=>{
                 const buyerBooking = req.body
                 console.log(buyerBooking);
                 const result = await buyerBookingsCollection.insertOne(buyerBooking)
                 res.send(result)
+            })
+
+            //get bookings buyer data from mongodb
+            app.get('/bookings', async (req,res)=>{
+                const query = {};
+                const cursor = buyerBookingsCollection.find(query)
+                const buyerBookings = await cursor.toArray()
+                res.send(buyerBookings)
             })
 
 
