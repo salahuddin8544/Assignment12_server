@@ -19,6 +19,7 @@ async function run(){
         const categoriesCollection = client.db('assignment12').collection('categories')
         const productsCollection = client.db('assignment12').collection('products')
         const buyerBookingsCollection = client.db('assignment12').collection('bookings')
+        const usersCollection = client.db('assignment12').collection('users')
 
         //get categories
         app.get('/categoires',async (req,res)=>{
@@ -35,7 +36,7 @@ async function run(){
             res.send(result)
         })
 
-        // post bookings buyer data in db
+        // post bookings buyer booking data in db
 
             app.post('/bookings', async(req,res)=>{
                 const buyerBooking = req.body
@@ -44,13 +45,33 @@ async function run(){
                 res.send(result)
             })
 
-            //get bookings buyer data from mongodb
+            //get bookings buyer bookin data from mongodb
             app.get('/bookings', async (req,res)=>{
                 const query = {};
                 const cursor = buyerBookingsCollection.find(query)
                 const buyerBookings = await cursor.toArray()
                 res.send(buyerBookings)
             })
+
+
+
+
+            // post usrers  data in db
+
+            app.post('/users', async(req,res)=>{
+                const users = req.body
+                console.log(users);
+                const result = await usersCollection.insertOne(users)
+                res.send(result)
+            })
+            //get users data from mongodb
+            app.get('/users', async (req,res)=>{
+                const query = {};
+                const cursor = usersCollection.find(query)
+                const users = await cursor.toArray()
+                res.send(users)
+            })
+
 
 
     }
