@@ -3,12 +3,15 @@ const cors = require('cors')
 const app = express()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000 ;
+require('dotenv').config()
+const stripe = require("stripe")(' use a secret API');
+
 
 
 // middle ware 
 app.use(cors())
 app.use(express.json())
-require('dotenv').config()
+
 
 const uri = `mongodb+srv://${process.env.COMPUTER}:${process.env.PASSWORD}@cluster0.mdunt9i.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri);
@@ -20,6 +23,7 @@ async function run(){
         const productsCollection = client.db('assignment12').collection('products')
         const buyerBookingsCollection = client.db('assignment12').collection('bookings')
         const usersCollection = client.db('assignment12').collection('users')
+        const reportsCollection = client.db('assignment12').collection('reports')
 
         //get categories
         app.get('/categoires',async (req,res)=>{
@@ -35,7 +39,7 @@ async function run(){
             const result = await productsCollection.find(query).toArray()
             res.send(result)
         })
-
+      
         // post bookings buyer booking data in db
 
             app.post('/bookings', async(req,res)=>{
@@ -47,10 +51,10 @@ async function run(){
 
             //get bookings buyer bookin data from mongodb
             app.get('/bookings', async (req,res)=>{
-                const query = {};
-                const cursor = buyerBookingsCollection.find(query)
-                const buyerBookings = await cursor.toArray()
-                res.send(buyerBookings)
+                const email = req.query.email
+                const query = {email:email}
+                const cursor = await buyerBookingsCollection.find(query).toArray()
+                res.send(cursor)
             })
 
 
@@ -62,6 +66,14 @@ async function run(){
                 const users = req.body
                 console.log(users);
                 const result = await usersCollection.insertOne(users)
+                res.send(result)
+            })
+            // post repots  data in db
+
+            app.post('/reports', async(req,res)=>{
+                const report = req.body
+                console.log(report);
+                const result = await reportsCollection.insertOne(report)
                 res.send(result)
             })
             //get users data from mongodb
@@ -79,6 +91,23 @@ async function run(){
                 const query = {_id:ObjectId(id)};
                 const booking = await buyerBookingsCollection.findOne(query)
                 res.send(booking)
+            })
+
+            // payment card 
+            app.post("/create-payment-intent", async (req,res)=>{
+                const booking = req.body;
+                const Price = booking.Price;
+                const amount = Price * 100;
+                const paymentIntent = await stripe.paymentIntents.create({
+                    currency:'usd',
+                    amount: amount,
+                    "payment_method_types":[
+                        'card'
+                    ]
+                })
+                res.send({
+                    clientSecret: paymentIntent.client_secret,
+                  });
             })
     }
     finally{
