@@ -13,12 +13,9 @@ const jwt = require('jsonwebtoken');
 const port = process.env.PORT || 5000 ;
 const stripe = require("stripe")('sk_test_51M8QKgDkkfkXeQg4QD21Oyg7MqslreAwa3Xq5RFcDVTHc0BCsjZYkioAoK87njhL4YweSU5FXhMGArijIwV4tSaW00hCxpH494');
 
-
-
 // middle ware 
 app.use(cors())
 app.use(express.json())
-
 
 // verify user token 
 function verifyJWT(req,res,next) {
@@ -78,19 +75,10 @@ async function run(){
         return res.send({accessToken:token})
     }
     // if user not found from db send the status 
-    res.status(403).send({accessToken:'Not found '})
+    // res.status(403).send({accessToken:'Not found '})
    })
-// ------------user verify and save user and get user---------------//
 
 console.log('TOKEN',process.env.ACCESS_TOKEN);
-
-
-
-
-
-
-
-
 
 // check user isAdmin ,if user.role not admin ? .. he will not access go to admin dashbord url
 app.get('/users/admin/:email', async(req,res)=> {
@@ -129,12 +117,7 @@ app.get('/users/admin/:email', async(req,res)=> {
 app.get('/users/seller/:email', async(req,res)=> {
     const email = req.params.email;
     const query = {email}
-    // const decodedEmail = req.decoded.email;
-    // const query = {email:decodedEmail};
     const user = await usersCollection.findOne(query);
-    // if(user?.userType !== "seller"){
-    //     return res.status(403).send({message:'forbidden access'})
-    // }
     res.send({isSeller:user?.role  })
 })
 
