@@ -27,11 +27,12 @@ function verifyJWT(req,res,next) {
     }
     const token = authHeader.split(' ')[1]
     // jwt verify  call for verify client req token 
-    console.log('token find ',token)
+    // console.log('token find ',token)
     jwt.verify(token, process.env.ACCESS_TOKEN , function(err , decoded) {
         // if an error occurd , then send the 403 status 
         if(err) {
-            return res.status(403).send({message:'forbidden access'})
+            console.log(err);
+            return res.status(403).send({message:'forbidden access from jwt',})
         }
         //  if not an error occurd doing work 
         req.decoded = decoded ;
@@ -68,17 +69,25 @@ async function run(){
     const email = req.query.email;
     const query = {email:email};
     const user = await usersCollection.findOne(query);
-    // if get user , give a token 
     if(user){
-        const token = jwt.sign({email},process.env.ACCESS_TOKEN,{expiresIn:'2h'})
-   
-        return res.send({accessToken:token})
+        const token = jwt.sign({email},process.env.ACCESS_TOKEN,{expiresIn:'1h'})
+       return res.send({accessToken:token})
     }
+    res.status(403).send({accessToken: ''})
+    console.log(user);
+
+
+    //previous codes
+    // if get user , give a token 
+    // if(user){
+        // const token = jwt.sign({email},process.env.ACCESS_TOKEN,{expiresIn:'2h'})
+   
+        // return res.send({accessToken:token})
+    // }
     // if user not found from db send the status 
     // res.status(403).send({accessToken:'Not found '})
    })
 
-console.log('TOKEN',process.env.ACCESS_TOKEN);
 
 // check user isAdmin ,if user.role not admin ? .. he will not access go to admin dashbord url
 app.get('/users/admin/:email', async(req,res)=> {
@@ -90,26 +99,45 @@ app.get('/users/admin/:email', async(req,res)=> {
 
 
  // update user by specific id and make admin  .....
- app.put('/users/admin/:id',verifyJWT, async(req,res)=> {
-    // load user from db and check role admin have or haven't
-    const decodedEmail = req.decoded.email;
-    const query = {email:decodedEmail};
-    const user = await usersCollection.findOne(query);
-    if(user.role !== "admin" ){
-        return res.status(403).send({message:'forbidden access '})
-    } 
-    const id = req.params.id ;
-    const filter = {_id:ObjectId(id)};
-    const options = {upsert:true};
-    const updateDoc = {
+//  app.put('/users/admin/:id', async(req,res)=> {
+//     // load user from db and check role admin have or haven't
+//     const decodedEmail = req.decoded.email;
+//     const query = {email:decodedEmail};
+//     const user = await usersCollection.findOne(query);
+//     if(user.role !== "admin" ){
+//         return res.status(403).send({message:'forbidden access '})
+//     } 
+//     const id = req.params.id ;
+//     const filter = {_id:ObjectId(id)};
+//     const options = {upsert:true};
+//     const updateDoc = {
+//         $set:{
+//             role:'admin'
+//         },
+//     };
+//     const result = await usersCollection.updateOne(filter,updateDoc,options);
+//     res.send(result)
+//  })
+
+app.put('/users/admin/:id', async (req,res)=>{
+  // load user from db and check role admin have or haven't
+    // const decodedEmail = req.decoded.email;
+    // const query = {email:decodedEmail};
+    // const user = await usersCollection.findOne(query)
+    // if(user.role  !== 'admin'){
+    //     return res.status(403).send({messae: 'forbidder access'})
+    // }
+    const id = req.params.id;
+    const filter = {_id: ObjectId(id)}
+    const option = {upsert: true};
+    const upDateDoc ={
         $set:{
             role:'admin'
-        },
-    };
-    const result = await usersCollection.updateOne(filter,updateDoc,options);
+        }
+    }
+    const result = await usersCollection.updateOne(filter, upDateDoc,option)
     res.send(result)
- })
-
+})
 
 
 
@@ -168,6 +196,11 @@ app.get('/users/seller/:email', async(req,res)=> {
                 const result = await usersCollection.insertOne(users)
                 res.send(result)
             })
+
+
+            //<All productst
+
+
             // post new added product from clint site  data in db
 
             app.post('/products', async(req,res)=>{
@@ -176,14 +209,27 @@ app.get('/users/seller/:email', async(req,res)=> {
                 const result = await productsCollection.insertOne(addedProduct)
                 res.send(result)
             })
+           // find all  my added  products by email  
+           app.get('/products', async(req,res)=>{
+                const query = {}
+                const result = await productsCollection.find(query).toArray()
+                res.send(result)
+           })
+                app.get('/products/:email', async(req,res)=> {
+                    const email = req.params.email;
+                    const query = {email:email};
+                    const myProducts = await productsCollection.find(query).toArray();
+                    res.send(myProducts);
+                })
 
-            // find all products form db
 
-            app.get('/products', async (req,res)=>{
-                const query = {};
-                const cursor = productsCollection.find(query)
-                const reports = await cursor.toArray()
-                res.send(reports)
+        //delete products
+
+            app.put('/products/:id', async (req,res)=>{
+                const id = req.params.id;
+                const query = {_id:ObjectId(id)};
+                const product = await productsCollection.deleteOne(query)
+                res.send(product)
             })
 
 
@@ -205,7 +251,13 @@ app.get('/users/seller/:email', async(req,res)=> {
                 res.send(reports)
             })
 
-
+            // delete reports 
+            app.put('/reports/:email', async(req,res)=>{
+                const email = req.params.email;
+                const query = {email:email}
+                const deleteReports = await reportsCollection.deleteOne(query)
+                res.send(deleteReports)
+            })
             //get users data from mongodb
             app.get('/users', async (req,res)=>{
                 const query = {};
@@ -215,12 +267,30 @@ app.get('/users/seller/:email', async(req,res)=> {
             })
 
 
+            //uers Deleted
+            app.put('/users/:email', async(req,res)=> {
+                const email = req.params.email;
+                const query = {email:email}
+                const deleteUesr = await usersCollection.deleteOne(query);
+                console.log(deleteUesr);
+                res.send(deleteUesr)
+            })
+
             // bookings id data loaded
             app.get('/bookings/:id', async (req,res)=>{
                 const id = req.params.id;
                 const query = {_id:ObjectId(id)};
                 const booking = await buyerBookingsCollection.findOne(query)
                 res.send(booking)
+            })
+
+
+            // delete myorders
+            app.put('/myorders/:id', async (req, res)=>{
+                const id = req.params.id;
+                const query = {_id:ObjectId(id)}
+                const myOrders = await buyerBookingsCollection.deleteOne(query)
+                res.send(myOrders)
             })
 
             // payment card 
